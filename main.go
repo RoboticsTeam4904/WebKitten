@@ -30,9 +30,9 @@ var (
 func main() {
 	InitLog(debugOut, infoOut, warningOut, errorOut)
 
-	flag.StringVar(&Address, "address", "localhost", "Address of the remote server")
+	flag.StringVar(&Address, "address", "10.49.4.2", "Address of the remote server")
 	flag.StringVar(&Port, "port", "22", "SSH port of teh remote server")
-	flag.StringVar(&User, "user", "root", "User used to connect to the remote server")
+	flag.StringVar(&User, "user", "lvuser", "User used to connect to the remote server")
 	flag.StringVar(&KeyPath, "key", "", "Path of the keyfile used for authentication")
 	flag.StringVar(&Password, "password", "", "Password used for authentication")
 	flag.StringVar(&LogPath, "log", "/home/lvuser/logs/recent.log", "Path of the log file on the remote server")
@@ -51,6 +51,7 @@ func main() {
 	Info.Println(<-remoteLog.LiveLog)
 	hub := NewHub()
 	hub.addInput(remoteLog.LiveLog)
+	hub.merge()
 	go hub.run()
 	StartServer(Listen, hub)
 }
