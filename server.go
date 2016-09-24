@@ -5,8 +5,8 @@ import "net/http"
 func StartServer(port string, hub *Hub) {
 	serveSingle("/", "./www/index.html")
 	serveSingle("/index.js", "./www/index.js")
-	http.HandleFunc("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./www/assets"))))
-	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.RequestWriter) {
+	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./www/assets"))))
+	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		serveWS(hub, w, r)
 	})
 

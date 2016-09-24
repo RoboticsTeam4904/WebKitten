@@ -15,9 +15,7 @@ func NewSession(address, port, user, password, key string) (*ssh.Session, error)
 		}
 		authMethods = append(authMethods, ssh.PublicKeys(signer))
 	}
-	if password != "" {
-		authMethods = append(authMethods, ssh.Password(password))
-	}
+	authMethods = append(authMethods, ssh.Password(password))
 	sshConfig := &ssh.ClientConfig{
 		User: user,
 		Auth: authMethods,
