@@ -1,14 +1,23 @@
 package main
 
+import (
+	"sync"
+)
+
 type Hub struct {
 	clients    map[*Client]bool
 	broadcast  chan string
 	register   chan *Client
 	unregister chan *Client
 	content    []byte
+
+	channelMerge *ChannelMerge
 }
 
-var ()
+type ChannelMerge struct {
+	sync.Mutex
+	inputs []chan string
+}
 
 func NewHub() *Hub {
 	return &Hub{
@@ -16,6 +25,10 @@ func NewHub() *Hub {
 		broadcast:  make(chan string),
 		register:   make(chan *Client),
 		unregister: make(chan *Client),
+
+		channelMerge: &ChannelMerge{
+			inputs: []chan string{},
+		},
 	}
 }
 
@@ -50,5 +63,27 @@ func (hub *Hub) broadcastMessage(message string) {
 			delete(hub.clients, client)
 		}
 	}
+}
 
+func (hub *Hub) addInput(ch chan string) {
+	hub.channelMerge.Lock()
+	defer hub.channelMerge.Unlock()
+	hub.channelMerge.inputs = append(hub.channelMerge.inputs, ch)
+}
+
+func (hub *Hub) merge() {
+	hub.channelMerge.Lock()
+	defer hub.channelMerge.Unlock()
+	for _, ch := range hub.channelMerge.inputs {
+		go func(c chan string) {
+			for {
+				message, ok := <-c
+				if !ok {
+					break
+				}
+				hub.broadcast <- message
+			}
+			return
+		}(ch)
+	}
 }

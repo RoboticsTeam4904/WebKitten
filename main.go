@@ -23,6 +23,8 @@ var (
 	Password string
 	// LogPath is the path of the log file on the remote server
 	LogPath string
+	// Listen is the port that the WebKitten server listens on
+	Listen string
 )
 
 func main() {
@@ -34,6 +36,7 @@ func main() {
 	flag.StringVar(&KeyPath, "key", "", "Path of the keyfile used for authentication")
 	flag.StringVar(&Password, "password", "", "Password used for authentication")
 	flag.StringVar(&LogPath, "log", "/home/lvuser/logs/recent.log", "Path of the log file on the remote server")
+	flag.StringVar(&Listen, "listen", "8080", "Port that the WebKitten server listens on")
 
 	session, sessionErr := NewSession(Address, Port, User, Password, KeyPath)
 	if sessionErr != nil {
@@ -46,4 +49,8 @@ func main() {
 	go remoteLog.StartRead(session)
 	Info.Println("Started Remote Read")
 	Info.Println(<-remoteLog.LiveLog)
+	hub := NewHub()
+	hub.addInput(remoteLog.LiveLog)
+	go hub.run()
+	StartServer(Listen, hub)
 }

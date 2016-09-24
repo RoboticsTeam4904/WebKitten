@@ -2,20 +2,19 @@ package main
 
 import "net/http"
 
-func StartServer(port string) {
-	hub := NewHub()
-	go hub.run()
+func StartServer(port string, hub *Hub) {
+	serveSingle("/", "./www/index.html")
+	serveSingle("/index.js", "./www/index.js")
+	http.HandleFunc("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir("./www/assets"))))
+	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.RequestWriter) {
+		serveWS(hub, w, r)
+	})
+
+	panic(http.ListenAndServe(":"+port, nil))
 }
 
-func handleRoot(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" {
-		http.Error(w, "Not found", 404)
-		return
-	}
-	if r.Method != "GET" {
-		http.Error(w, "Method not allowed", 405)
-		return
-	}
-	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-
+func serveSingle(pattern string, filename string) {
+	http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, filename)
+	})
 }
