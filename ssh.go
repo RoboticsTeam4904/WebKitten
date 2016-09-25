@@ -15,7 +15,14 @@ func NewSession(address, port, user, password, key string) (*ssh.Session, error)
 		}
 		authMethods = append(authMethods, ssh.PublicKeys(signer))
 	}
-	authMethods = append(authMethods, ssh.Password(password))
+	authMethods = append(authMethods, ssh.KeyboardInteractive(func(user, instruction string, questions []string, echoes []bool) ([]string, error) {
+		answers := make([]string, len(questions))
+		for index := range answers {
+			answers[index] = password
+		}
+
+		return answers, nil
+	}))
 	sshConfig := &ssh.ClientConfig{
 		User: user,
 		Auth: authMethods,
@@ -28,10 +35,6 @@ func NewSession(address, port, user, password, key string) (*ssh.Session, error)
 	if sshSessionErr != nil {
 		panic("Could not establish session: " + sshSessionErr.Error())
 	}
-	defer func() {
-		closeErr := sshClient.Close()
-		Error.Println(closeErr)
-	}()
 	return sshSession, nil
 }
 

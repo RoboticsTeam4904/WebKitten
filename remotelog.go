@@ -34,6 +34,6 @@ func (remote *RemoteLog) StartRead(session *ssh.Session) {
 	scannerErr := scanner.Err()
 	if scannerErr != nil {
 		close(remote.LiveLog)
-		Error.Println(scannerErr)
+		Error.Println(scannerErr.Error())
 	}
 }

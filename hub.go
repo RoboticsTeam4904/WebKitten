@@ -53,7 +53,10 @@ func (hub *Hub) run() {
 }
 
 func (hub *Hub) broadcastMessage(message string) {
-	hub.content = append([]byte(message), hub.content...)[:maxMessageSize]
+	hub.content = append([]byte(message), hub.content...)
+	if len(hub.content) > maxMessageSize {
+		hub.content = hub.content[:maxMessageSize]
+	}
 	for client := range hub.clients {
 		select {
 		case client.send <- []byte(message):

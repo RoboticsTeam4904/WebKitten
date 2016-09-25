@@ -40,6 +40,8 @@ func main() {
 	flag.StringVar(&LogPath, "log", "/home/lvuser/logs/recent.log", "Path of the log file on the remote server")
 	flag.StringVar(&Listen, "listen", "8080", "Port that the WebKitten server listens on")
 
+	flag.Parse()
+
 	Info.Println("Initializing remote connection...")
 	session, sessionErr := NewSession(Address, Port, User, Password, KeyPath)
 	if sessionErr != nil {
