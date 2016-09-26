@@ -18,6 +18,7 @@ var (
 	upgrader = websocket.Upgrader{
 		ReadBufferSize:  maxMessageSize,
 		WriteBufferSize: maxMessageSize,
+		Subprotocols:    []string{"webkitten-v1"},
 	}
 )
 
