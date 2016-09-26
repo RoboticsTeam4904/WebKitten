@@ -63,11 +63,11 @@ func ParseLogItem(rawitem string) (LogItem, error) {
 	logItem := LogItem{}
 	parts := strings.SplitN(rawitem, " ", 4)
 	if len(parts) < 4 {
-		return &LogItem{}, errors.New("logitem: couldn't parse log item: malformatted input \"" + rawitem + "\"")
+		return LogItem{}, errors.New("logitem: couldn't parse log item: malformatted input \"" + rawitem + "\"")
 	}
 	logItem.Timestamp = parts[0]
-	logItem.LogLevel = strings.TrimSuffix(parts[1])
-	logItem.Source = strings.TrimSuffix(parts[2])
+	logItem.LogLevel = strings.TrimSuffix(parts[1], ":")
+	logItem.Source = strings.TrimSuffix(parts[2], ":")
 	logItem.Message = parts[3]
 	return logItem, nil
 }

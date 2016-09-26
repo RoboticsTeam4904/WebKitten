@@ -54,7 +54,6 @@ func main() {
 	Info.Println("Initialized Remote Log")
 	go remoteLog.StartRead(session)
 	Info.Println("Started Remote Read")
-	Info.Println(<-remoteLog.LiveLog)
 	hub := NewHub()
 	hub.addInput(remoteLog.LiveLog)
 	hub.merge()
