@@ -1,0 +1,84 @@
+/* NOT GENERAATED, FOR NOW */
+
+body {
+	font-family: 'Lato';
+}
+
+.webkitten-page-header, .ConnectionStatusIndicator {
+	text-align: center;
+}
+
+.connection-status-label {
+	font-size: 13pt;
+	font-weight: bold;
+	padding-right: 10px;
+}
+
+.connection-status-value {
+	display: inline-block;
+	padding: 8px 10px;
+	color: white;
+}
+
+.connection-status-value.status-connected {
+	background-color: green;
+}
+
+.connection-status-value.status-connecting {
+	color: black;
+	animation-name: colors;
+	animation-duration: 2s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}
+
+@keyframes colors {
+    0%   { opacity: 1; }
+    50%  { opacity: 0.4; }
+    100%  { opacity: 1; }
+}
+
+.connection-status-value.status-disconnected {
+	background-color: grey;
+}
+
+.connection-status-value.status-failed {
+	background-color: red;
+}
+
+.Subsystems {
+	margin-top: 50px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+
+.Subsystem-container {
+	margin-bottom: 40px;
+	background-color: #ddd;
+	width: 600px;
+}
+
+.Subsystem-container .Subsystem-label {
+	padding-left: 10px;
+	padding-top: 10px;
+}
+
+.Subsystem-log-box {
+	background-color: #555;
+	height: 150px; /* maybe max-height? */
+	overflow: auto;
+
+	color: white;
+	font-size: 9pt;
+	font-family: 'Menlo', 'Monaco', sans-serif;
+}
+
+.Subsystem-log-box .Subsystem-log-item {
+	padding: 5px 10px;
+	border-bottom: 1px solid #494949;
+}
+
+.Subsystem-log-box .Subsystem-log-item:nth-child(even) {
+	background-color: #444;
+}

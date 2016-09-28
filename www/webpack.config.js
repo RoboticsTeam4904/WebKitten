@@ -16,7 +16,11 @@ module.exports = {
           presets: ['es2015', 'react'],
           sourceMaps: true
         }
-      }
+      },
+      {
+        test: /\.css$/,
+        loader: 'style-loader!css-loader'
+      },
     ]
   }
 }
